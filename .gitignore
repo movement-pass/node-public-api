@@ -1,0 +1,9 @@
+node_modules/
+.vscode/
+.idea/
+build/
+dist/
+coverage/
+.cdk.staging
+cdk.out
+cdk.context.json
