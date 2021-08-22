@@ -9,7 +9,7 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { captureAWSv3Client } from 'aws-xray-sdk';
+import { captureAWSv3Client, express as xRay } from 'aws-xray-sdk';
 
 import { Jwt } from './infrastructure/jwt';
 
@@ -19,9 +19,10 @@ import { PassesController } from './controllers/passes-controller';
 import { identityRouter } from './routers/identity-router';
 import { passesRouter } from './routers/passes-router';
 
+const inLambda = process.env.LAMBDA_TASK_ROOT;
+
 (() => {
   const region = process.env.AWS_REGION;
-  const inLambda = process.env.LAMBDA_TASK_ROOT;
 
   let ssmClient = new SSMClient({
     region
@@ -71,6 +72,10 @@ import { passesRouter } from './routers/passes-router';
 
 const app = express();
 
+if (inLambda) {
+  app.use(xRay.openSegment('public-api'));
+}
+
 app.use(
   cors({
     allowedHeaders: ['Authorization', 'Content-Type'],
@@ -94,5 +99,9 @@ app.use(express.json());
     passesRouter(container.resolve(PassesController), container.resolve(Jwt))
   );
 })();
+
+if (inLambda) {
+  app.use(xRay.closeSegment());
+}
 
 export { app };
