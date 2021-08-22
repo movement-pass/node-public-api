@@ -71,6 +71,7 @@ const inLambda = process.env.LAMBDA_TASK_ROOT;
 })();
 
 const app = express();
+app.disable('x-powered-by');
 
 if (inLambda) {
   app.use(xRay.openSegment('public-api'));
