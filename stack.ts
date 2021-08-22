@@ -78,6 +78,7 @@ class PublicApiStack extends Stack {
         allowHeaders: ['Authorization', 'Content-Type'],
         maxAge: Duration.days(365)
       },
+      disableExecuteApiEndpoint: true,
       createDefaultStage: false
     });
 
