@@ -3,6 +3,7 @@ import { Effect, PolicyStatement } from '@aws-cdk/aws-iam';
 import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
 import { StringParameter } from '@aws-cdk/aws-ssm';
 import { Table } from '@aws-cdk/aws-dynamodb';
+import { Bucket } from '@aws-cdk/aws-s3';
 import { LambdaProxyIntegration } from '@aws-cdk/aws-apigatewayv2-integrations';
 import {
   CorsHttpMethod,
@@ -62,7 +63,28 @@ class PublicApiStack extends Stack {
       );
 
       table.grantReadWriteData(lambda);
+
+      lambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ['dynamodb:Query'],
+          resources: [`${table.tableArn}/index/*`]
+        })
+      );
     }
+
+    const photoBucketName = StringParameter.valueForStringParameter(
+      this,
+      `${configRootKey}/photoBucketName`
+    );
+
+    const photoBucket = Bucket.fromBucketName(
+      this,
+      'photoBucket',
+      photoBucketName
+    );
+
+    photoBucket.grantPut(lambda);
 
     const integration = new LambdaProxyIntegration({
       handler: lambda,
