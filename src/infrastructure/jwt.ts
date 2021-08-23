@@ -9,7 +9,7 @@ class Jwt {
   constructor(private readonly _config: Config) {}
 
   async sign(applicant: IApplicant): Promise<string> {
-    const { jwtSecret, jwtExpire } = await this._config.get();
+    const { jwtSecret, jwtExpire, domain } = await this._config.get();
 
     return sign(
       {
@@ -19,22 +19,29 @@ class Jwt {
       },
       jwtSecret,
       {
-        expiresIn: jwtExpire
+        expiresIn: jwtExpire,
+        issuer: domain,
+        audience: domain
       }
     );
   }
 
   async verify(token: string): Promise<{ id: string }> {
-    const { jwtSecret } = await this._config.get();
+    const { jwtSecret, domain } = await this._config.get();
 
     return new Promise((resolve, reject) => {
-      verify(token, jwtSecret, (err, decoded) => {
-        if (err) {
-          return reject(err);
-        }
+      verify(
+        token,
+        jwtSecret,
+        { issuer: domain, audience: domain },
+        (err, decoded) => {
+          if (err) {
+            return reject(err);
+          }
 
-        resolve({ id: decoded.id });
-      });
+          resolve({ id: decoded.id });
+        }
+      );
     });
   }
 }
