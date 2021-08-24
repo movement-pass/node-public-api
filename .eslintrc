@@ -21,6 +21,7 @@
   "rules": {
     "eslint-comments/no-use": "off",
     "filenames/match-regex": "off",
+    "import/no-commonjs": "off",
     "import/no-namespace": "off",
     "no-unused-vars": "off",
     "sort-imports": "off",
