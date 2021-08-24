@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 import { validate } from './validate';
 
@@ -21,7 +21,7 @@ describe('validate', () => {
         body: { attr: 'an attribute' }
       };
 
-      func(req as Request, {} as Response, mockedNext as NextFunction);
+      func(req as Request, {} as Response, mockedNext);
     });
 
     it('calls next', () => {

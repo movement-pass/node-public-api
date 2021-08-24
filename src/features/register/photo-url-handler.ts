@@ -27,7 +27,7 @@ class PhotoUrlHandler extends Handler<PhotoUrlRequest, IPhotoUrlResult> {
   async handle(request: PhotoUrlRequest): Promise<IPhotoUrlResult> {
     const { photoBucketName, photoUploadExpiration } = await this._config.get();
 
-    const filename = Id.generate() + extname(request.filename);
+    const filename = `${Id.generate()}${extname(request.filename)}`;
 
     const url = await this._generateUploadUrl({
       bucket: photoBucketName,

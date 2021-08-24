@@ -25,7 +25,7 @@ describe('authorize', () => {
 
       const func = authorize(jwt as unknown as Jwt);
 
-      await func(req, {} as Response, mockedNext as NextFunction);
+      await func(req, {} as Response, mockedNext);
     });
 
     it('sets userId', () => {
