@@ -50,7 +50,9 @@ class RegisterHandler extends Handler<RegisterRequest, IJwtResult> {
       applicant.dateOfBirth = dayjs(applicant.dateOfBirth).toDate();
       applicant.createdAt = dayjs(applicant.createdAt).toDate();
     } catch (e) {
-      if (e.name === 'ConditionalCheckFailedException') {
+      if (
+        (e as Record<string, string>).name === 'ConditionalCheckFailedException'
+      ) {
         return undefined;
       }
       throw e;

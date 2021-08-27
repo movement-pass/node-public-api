@@ -36,22 +36,22 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@aws-cdk/aws-apigatewayv2": "^1.119.0",
-    "@aws-cdk/aws-apigatewayv2-integrations": "^1.119.0",
-    "@aws-cdk/aws-certificatemanager": "^1.119.0",
-    "@aws-cdk/aws-dynamodb": "^1.119.0",
-    "@aws-cdk/aws-iam": "^1.119.0",
-    "@aws-cdk/aws-lambda": "^1.119.0",
-    "@aws-cdk/aws-route53": "^1.119.0",
-    "@aws-cdk/aws-route53-targets": "^1.119.0",
-    "@aws-cdk/aws-s3": "^1.119.0",
-    "@aws-cdk/aws-ssm": "^1.119.0",
-    "@aws-cdk/core": "^1.119.0",
+    "@aws-cdk/aws-apigatewayv2": "^1.120.0",
+    "@aws-cdk/aws-apigatewayv2-integrations": "^1.120.0",
+    "@aws-cdk/aws-certificatemanager": "^1.120.0",
+    "@aws-cdk/aws-dynamodb": "^1.120.0",
+    "@aws-cdk/aws-iam": "^1.120.0",
+    "@aws-cdk/aws-lambda": "^1.120.0",
+    "@aws-cdk/aws-route53": "^1.120.0",
+    "@aws-cdk/aws-route53-targets": "^1.120.0",
+    "@aws-cdk/aws-s3": "^1.120.0",
+    "@aws-cdk/aws-ssm": "^1.120.0",
+    "@aws-cdk/core": "^1.120.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
     "@types/jsonwebtoken": "^8.5.5",
-    "@types/node": "^16.7.1",
+    "@types/node": "^16.7.2",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "@vercel/ncc": "^0.29.2",
@@ -65,6 +65,6 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.2"
   }
 }
