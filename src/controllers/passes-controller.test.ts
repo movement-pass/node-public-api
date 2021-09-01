@@ -94,6 +94,7 @@ describe('PassesController', () => {
   describe('detail', () => {
     describe('existent pass', () => {
       let mockedMediatorSend: jest.Mock;
+      let mockedHeaderSet: jest.Mock;
       let mockedResponseSend: jest.Mock;
       let viewPassRequest: ViewPassRequest;
 
@@ -115,9 +116,11 @@ describe('PassesController', () => {
           }
         };
 
+        mockedHeaderSet = jest.fn();
         mockedResponseSend = jest.fn();
 
         const res = {
+          header: mockedHeaderSet,
           send: mockedResponseSend
         };
 
@@ -132,6 +135,10 @@ describe('PassesController', () => {
       it('uses mediator', () => {
         expect(mockedMediatorSend).toHaveBeenCalled();
         expect(viewPassRequest).toBeInstanceOf(ViewPassRequest);
+      });
+
+      it('sets cache control header', () => {
+        expect(mockedHeaderSet).toHaveBeenCalled();
       });
 
       it('sends matching pass', () => {
@@ -179,6 +186,7 @@ describe('PassesController', () => {
 
   describe('list', () => {
     let mockedMediatorSend: jest.Mock;
+    let mockedHeaderSet: jest.Mock;
     let mockedResponseSend: jest.Mock;
     let viewPassesRequest: ViewPassesRequest;
 
@@ -199,9 +207,11 @@ describe('PassesController', () => {
         }
       };
 
+      mockedHeaderSet = jest.fn();
       mockedResponseSend = jest.fn();
 
       const res = {
+        header: mockedHeaderSet,
         send: mockedResponseSend
       };
 
@@ -216,6 +226,10 @@ describe('PassesController', () => {
     it('uses mediator', () => {
       expect(mockedMediatorSend).toHaveBeenCalled();
       expect(viewPassesRequest).toBeInstanceOf(ViewPassesRequest);
+    });
+
+    it('sets cache control header', () => {
+      expect(mockedHeaderSet).toHaveBeenCalled();
     });
 
     it('sends matching passes', () => {

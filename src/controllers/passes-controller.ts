@@ -40,6 +40,11 @@ class PassesController {
       return;
     }
 
+    res.header(
+      'cache-control',
+      `private,max-age=${detail.status === 'APPLIED' ? '300' : 60 * 24 * 30}`
+    );
+
     res.send(detail);
   }
 
@@ -59,6 +64,8 @@ class PassesController {
       IPassListResult,
       ViewPassesRequest
     >(request);
+
+    res.header('cache-control', 'private,max-age=300');
 
     res.send(result);
   }
