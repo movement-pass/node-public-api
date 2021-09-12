@@ -15,7 +15,7 @@ import { Table } from '@aws-cdk/aws-dynamodb';
 
 import { Bucket } from '@aws-cdk/aws-s3';
 
-import { Queue } from '@aws-cdk/aws-sqs';
+import { Stream } from '@aws-cdk/aws-kinesis';
 
 import {
   AwsIntegration,
@@ -107,17 +107,17 @@ class PublicApiStack extends Stack {
 
     photoBucket.grantPut(lambda);
 
-    const queue = Queue.fromQueueArn(
+    const stream = Stream.fromStreamArn(
       this,
-      'Queue',
-      `arn:aws:sqs:${this.region}:${this.account}:${app}_passes_load_${version}.fifo`
+      'Stream',
+      `arn:aws:kinesis:${this.region}:${this.account}:stream/passes-load`
     );
 
     const role = new Role(this, 'Role', {
       assumedBy: new ServicePrincipal('apigateway.amazonaws.com')
     });
 
-    queue.grantSendMessages(role);
+    stream.grantWrite(role);
 
     const lambdaIntegration = new LambdaIntegration(lambda, {
       proxy: true
@@ -148,21 +148,23 @@ class PublicApiStack extends Stack {
     proxyResource.addMethod('GET');
     proxyResource.addMethod('POST');
 
-    const queueIntegration = new AwsIntegration({
-      service: 'sqs',
-      path: queue.queueName,
+    const kinesisIntegration = new AwsIntegration({
+      service: 'kinesis',
+      action: 'PutRecord',
       integrationHttpMethod: 'POST',
       options: {
         passthroughBehavior: PassthroughBehavior.NEVER,
         connectionType: ConnectionType.INTERNET,
         credentialsRole: role,
         requestParameters: {
-          'integration.request.header.Content-Type':
-            "'application/x-www-form-urlencoded'"
+          'integration.request.header.Content-Type': "'application/json'"
         },
         requestTemplates: {
-          'application/json':
-            'Action=SendMessage&MessageBody=$util.urlEncode("$input.body)&MessageGroupId=$input.path("$.thana")'
+          'application/json': JSON.stringify({
+            StreamName: stream.streamName,
+            Data: '$util.base64Encode($input.body)',
+            PartitionKey: '$context.requestId'
+          })
         },
         integrationResponses: [
           {
@@ -181,7 +183,9 @@ class PublicApiStack extends Stack {
               'method.response.header.Access-Control-Allow-Origin': "'*'"
             },
             responseTemplates: {
-              'application/json': JSON.stringify({ success: true })
+              'application/json': JSON.stringify({
+                error: 'internal server error!'
+              })
             },
             selectionPattern: '500'
           }
@@ -194,7 +198,7 @@ class PublicApiStack extends Stack {
       'method.response.header.Access-Control-Allow-Origin': true
     };
 
-    api.root.addResource('passes').addMethod('POST', queueIntegration, {
+    api.root.addResource('passes').addMethod('POST', kinesisIntegration, {
       methodResponses: [
         {
           statusCode: '200',
