@@ -3,8 +3,6 @@ import { injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 
 import { Mediator } from '../infrastructure/mediator';
-import { ApplyRequest } from '../features/apply/apply-request';
-import { IdResult } from '../features/apply/id-result';
 import { ViewPassRequest } from '../features/view-pass/view-pass-request';
 import { IPassDetailItem } from '../features/view-pass/pass-detail-item';
 import { ViewPassesRequest } from '../features/view-passes/view-passes-request';
@@ -13,17 +11,6 @@ import { IPassListResult } from '../features/view-passes/pass-list-result';
 @injectable()
 class PassesController {
   constructor(private readonly _mediator: Mediator) {}
-
-  async apply(req: Request, res: Response): Promise<void> {
-    const request = new ApplyRequest({
-      ...req.body,
-      applicantId: (req as unknown as Record<string, string>).userId
-    });
-
-    const result = await this._mediator.send<IdResult, ApplyRequest>(request);
-
-    res.status(201).send(result);
-  }
 
   async detail(req: Request, res: Response): Promise<void> {
     const request = new ViewPassRequest({
@@ -42,7 +29,7 @@ class PassesController {
 
     res.header(
       'cache-control',
-      `private,max-age=${detail.status === 'APPLIED' ? '300' : 60 * 24 * 30}`
+      `private,max-age=${detail.status === 'APPLIED' ? 60 * 5 : 60 * 24 * 30}`
     );
 
     res.send(detail);
@@ -65,7 +52,7 @@ class PassesController {
       ViewPassesRequest
     >(request);
 
-    res.header('cache-control', 'private,max-age=300');
+    res.header('cache-control', `private,max-age=${60 * 5}`);
 
     res.send(result);
   }

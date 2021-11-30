@@ -1,12 +1,12 @@
 import { extname } from 'path';
 import { inject, injectable } from 'tsyringe';
 
+import { Id } from '../../infrastructure/id';
 import { handles } from '../../infrastructure/handles';
 import { Config } from '../../infrastructure/config';
 import { Handler } from '../../infrastructure/handler';
 import { IPhotoUrlResult } from './photo-url-result';
 import { PhotoUrlRequest } from './photo-url-request';
-import { Id } from '../../infrastructure/id';
 
 @injectable()
 @handles(PhotoUrlRequest)

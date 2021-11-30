@@ -5,9 +5,9 @@ import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 
 import { handles } from '../../infrastructure/handles';
 import { Handler } from '../../infrastructure/handler';
+import { Config } from '../../infrastructure/config';
 import { IPassDetailItem } from './pass-detail-item';
 import { ViewPassRequest } from './view-pass-request';
-import { Config } from '../../infrastructure/config';
 import { IPass } from '../../entities/pass';
 import { IApplicant } from '../../entities/applicant';
 

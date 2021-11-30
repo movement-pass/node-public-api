@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { IPhotoUrlResult } from './photo-url-result';
 import { Config } from '../../infrastructure/config';
+import { IPhotoUrlResult } from './photo-url-result';
 import { PhotoUrlRequest } from './photo-url-request';
 import { PhotoUrlHandler } from './photo-url-handler';
 

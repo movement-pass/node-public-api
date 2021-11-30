@@ -4,8 +4,8 @@ import dayjs from 'dayjs';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 import { Id } from '../../infrastructure/id';
-import { IPassDetailItem } from './pass-detail-item';
 import { Config } from '../../infrastructure/config';
+import { IPassDetailItem } from './pass-detail-item';
 import { ViewPassRequest } from './view-pass-request';
 import { ViewPassHandler } from './view-pass-handler';
 
