@@ -29,7 +29,7 @@ class PassesController {
 
     res.header(
       'cache-control',
-      `private,max-age=${detail.status === 'APPLIED' ? '300' : 60 * 24 * 30}`
+      `private,max-age=${detail.status === 'APPLIED' ? 60 * 5 : 60 * 24 * 30}`
     );
 
     res.send(detail);
@@ -52,7 +52,7 @@ class PassesController {
       ViewPassesRequest
     >(request);
 
-    res.header('cache-control', 'private,max-age=300');
+    res.header('cache-control', `private,max-age=${60 * 5}`);
 
     res.send(result);
   }

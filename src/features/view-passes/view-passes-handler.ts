@@ -5,11 +5,11 @@ import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 
 import { handles } from '../../infrastructure/handles';
 import { Handler } from '../../infrastructure/handler';
+import { Config } from '../../infrastructure/config';
 import { ViewPassesRequest } from './view-passes-request';
 import { IPassListResult } from './pass-list-result';
 import { IPassListKey } from './pass-list-key';
 import { IPassItem } from '../pass-item';
-import { Config } from '../../infrastructure/config';
 
 @injectable()
 @handles(ViewPassesRequest)
