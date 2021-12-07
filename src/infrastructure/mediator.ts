@@ -6,6 +6,7 @@ import { Request } from './request';
 import { RegisterHandler } from '../features/register/register-handler';
 import { LoginHandler } from '../features/login/login-handler';
 import { PhotoUrlHandler } from '../features/register/photo-url-handler';
+import { ApplyHandler } from '../features/apply/apply-handler';
 import { ViewPassesHandler } from '../features/view-passes/view-passes-handler';
 import { ViewPassHandler } from '../features/view-pass/view-pass-handler';
 
@@ -13,6 +14,7 @@ const registrations = [
   RegisterHandler,
   LoginHandler,
   PhotoUrlHandler,
+  ApplyHandler,
   ViewPassesHandler,
   ViewPassHandler
 ].map((c) => ({
