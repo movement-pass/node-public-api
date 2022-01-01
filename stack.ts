@@ -1,12 +1,5 @@
 import { App, Construct, Duration, Stack, StackProps } from '@aws-cdk/core';
-
-import {
-  Effect,
-  PolicyStatement,
-  Role,
-  ServicePrincipal
-} from '@aws-cdk/aws-iam';
-
+import { Effect, PolicyStatement } from '@aws-cdk/aws-iam';
 import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
 
 import { StringParameter } from '@aws-cdk/aws-ssm';
@@ -15,26 +8,20 @@ import { Table } from '@aws-cdk/aws-dynamodb';
 
 import { Bucket } from '@aws-cdk/aws-s3';
 
-import { Queue } from '@aws-cdk/aws-sqs';
+import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations';
 
 import {
-  AwsIntegration,
-  BasePathMapping,
-  ConnectionType,
+  CorsHttpMethod,
   DomainName,
-  EndpointType,
-  LambdaIntegration,
-  MethodLoggingLevel,
-  PassthroughBehavior,
-  RestApi,
-  SecurityPolicy
-} from '@aws-cdk/aws-apigateway';
+  HttpApi,
+  PayloadFormatVersion
+} from '@aws-cdk/aws-apigatewayv2';
 
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
 
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 
-import { ApiGatewayDomain } from '@aws-cdk/aws-route53-targets';
+import { ApiGatewayv2DomainProperties } from '@aws-cdk/aws-route53-targets';
 
 class PublicApiStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -107,104 +94,21 @@ class PublicApiStack extends Stack {
 
     photoBucket.grantPut(lambda);
 
-    const queue = Queue.fromQueueArn(
-      this,
-      'Queue',
-      `arn:aws:sqs:${this.region}:${this.account}:${app}_passes_load_${version}.fifo`
-    );
-
-    const role = new Role(this, 'Role', {
-      assumedBy: new ServicePrincipal('apigateway.amazonaws.com')
+    const integration = new HttpLambdaIntegration('LambdaIntegration', lambda, {
+      payloadFormatVersion: PayloadFormatVersion.VERSION_2_0
     });
 
-    queue.grantSendMessages(role);
-
-    const lambdaIntegration = new LambdaIntegration(lambda, {
-      proxy: true
-    });
-
-    const api = new RestApi(this, 'Api', {
-      restApiName: name,
-      minimumCompressionSize: 1024,
-      endpointTypes: [EndpointType.REGIONAL],
-      defaultCorsPreflightOptions: {
+    const api = new HttpApi(this, 'Api', {
+      apiName: name,
+      defaultIntegration: integration,
+      corsPreflight: {
         allowOrigins: ['*'],
-        allowMethods: ['GET', 'POST'],
+        allowMethods: [CorsHttpMethod.GET, CorsHttpMethod.POST],
         allowHeaders: ['Authorization', 'Content-Type'],
         maxAge: Duration.days(365)
       },
-      deployOptions: {
-        metricsEnabled: true,
-        tracingEnabled: true,
-        loggingLevel: MethodLoggingLevel.ERROR,
-        stageName: version
-      },
-      cloudWatchRole: true,
-      defaultIntegration: lambdaIntegration
-    });
-
-    const proxyResource = api.root.addProxy({ anyMethod: false });
-
-    proxyResource.addMethod('GET');
-    proxyResource.addMethod('POST');
-
-    const queueIntegration = new AwsIntegration({
-      service: 'sqs',
-      path: queue.queueName,
-      integrationHttpMethod: 'POST',
-      options: {
-        passthroughBehavior: PassthroughBehavior.NEVER,
-        connectionType: ConnectionType.INTERNET,
-        credentialsRole: role,
-        requestParameters: {
-          'integration.request.header.Content-Type':
-            "'application/x-www-form-urlencoded'"
-        },
-        requestTemplates: {
-          'application/json':
-            'Action=SendMessage&MessageBody=$util.urlEncode("$input.body)&MessageGroupId=$input.path("$.thana")'
-        },
-        integrationResponses: [
-          {
-            statusCode: '200',
-            responseParameters: {
-              'method.response.header.Access-Control-Allow-Origin': "'*'"
-            },
-            responseTemplates: {
-              'application/json': JSON.stringify({ success: true })
-            },
-            selectionPattern: '200'
-          },
-          {
-            statusCode: '500',
-            responseParameters: {
-              'method.response.header.Access-Control-Allow-Origin': "'*'"
-            },
-            responseTemplates: {
-              'application/json': JSON.stringify({ success: true })
-            },
-            selectionPattern: '500'
-          }
-        ]
-      }
-    });
-
-    const methodResponseParameters = {
-      'method.response.header.Content-Type': true,
-      'method.response.header.Access-Control-Allow-Origin': true
-    };
-
-    api.root.addResource('passes').addMethod('POST', queueIntegration, {
-      methodResponses: [
-        {
-          statusCode: '200',
-          responseParameters: methodResponseParameters
-        },
-        {
-          statusCode: '500',
-          responseParameters: methodResponseParameters
-        }
-      ]
+      disableExecuteApiEndpoint: true,
+      createDefaultStage: false
     });
 
     const rootDomain = this.node.tryGetContext('domain');
@@ -220,23 +124,15 @@ class PublicApiStack extends Stack {
       certificateArn
     );
 
-    const domainName = new DomainName(this, 'DomainName', {
+    const domainName = new DomainName(this, 'Domain', {
       domainName: `${subDomain}.${rootDomain}`,
-      endpointType: EndpointType.REGIONAL,
-      securityPolicy: SecurityPolicy.TLS_1_2,
       certificate
     });
 
-    new BasePathMapping(this, 'Mapping', {
-      restApi: api,
-      domainName,
-      basePath: version
-    });
-
-    const domain = DomainName.fromDomainNameAttributes(this, 'Domain', {
-      domainName: domainName.domainName,
-      domainNameAliasHostedZoneId: domainName.domainNameAliasHostedZoneId,
-      domainNameAliasTarget: domainName.domainNameAliasDomainName
+    api.addStage('Stage', {
+      stageName: version,
+      autoDeploy: true,
+      domainMapping: { domainName, mappingKey: version }
     });
 
     const zone = HostedZone.fromLookup(this, 'Zone', {
@@ -245,7 +141,12 @@ class PublicApiStack extends Stack {
 
     new ARecord(this, 'Mount', {
       recordName: subDomain,
-      target: RecordTarget.fromAlias(new ApiGatewayDomain(domain)),
+      target: RecordTarget.fromAlias(
+        new ApiGatewayv2DomainProperties(
+          domainName.regionalDomainName,
+          domainName.regionalHostedZoneId
+        )
+      ),
       zone
     });
   }
