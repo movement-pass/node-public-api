@@ -22,7 +22,7 @@
     "@aws-sdk/client-ssm": "^3.45.0",
     "@aws-sdk/lib-dynamodb": "^3.45.0",
     "@aws-sdk/s3-request-presigner": "^3.45.0",
-    "@vendia/serverless-express": "^4.5.2",
+    "@vendia/serverless-express": "^4.5.3",
     "aws-lambda": "^1.0.7",
     "aws-xray-sdk": "^3.3.4",
     "cors": "^2.8.5",
