@@ -47,7 +47,7 @@
     "@aws-cdk/aws-s3": "^1.137.0",
     "@aws-cdk/aws-sqs": "^1.137.0",
     "@aws-cdk/aws-ssm": "^1.137.0",
-    "@aws-cdk/core": "^1.137.0",
+    "@aws-cdk/core": "^1.154.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
