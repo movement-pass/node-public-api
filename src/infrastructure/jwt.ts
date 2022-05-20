@@ -39,7 +39,7 @@ class Jwt {
             return reject(err);
           }
 
-          resolve({ id: decoded.id });
+          resolve({ id: (decoded as Record<string, string>).id });
         }
       );
     });
