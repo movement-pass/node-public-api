@@ -32,7 +32,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.6.0",
+    "tsyringe": "^4.7.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
