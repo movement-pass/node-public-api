@@ -44,7 +44,7 @@
     "@aws-cdk/aws-lambda-event-sources": "^1.156.1",
     "@aws-cdk/aws-route53": "^1.156.1",
     "@aws-cdk/aws-route53-targets": "^1.156.1",
-    "@aws-cdk/aws-s3": "^1.156.1",
+    "@aws-cdk/aws-s3": "^1.158.0",
     "@aws-cdk/aws-sqs": "^1.156.1",
     "@aws-cdk/aws-ssm": "^1.156.1",
     "@aws-cdk/core": "^1.156.1",
