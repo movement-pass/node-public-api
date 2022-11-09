@@ -30,16 +30,16 @@ describe('validate', () => {
   });
 
   describe('fails', () => {
-    let mockedResponseSend: jest.Mock;
+    let mockedResponseJson: jest.Mock;
     let mockedResponseStatus: jest.Mock;
 
     beforeAll(() => {
-      mockedResponseSend = jest.fn();
-      mockedResponseStatus = jest.fn(() => ({ send: mockedResponseSend }));
+      mockedResponseJson = jest.fn();
+      mockedResponseStatus = jest.fn(() => ({ json: mockedResponseJson }));
 
       const res = {
         status: mockedResponseStatus,
-        send: mockedResponseSend
+        send: mockedResponseJson
       };
 
       const req = {
@@ -51,7 +51,7 @@ describe('validate', () => {
 
     it('sends error', () => {
       expect(mockedResponseStatus).toHaveBeenCalledWith(400);
-      expect(mockedResponseSend).toHaveBeenCalled();
+      expect(mockedResponseJson).toHaveBeenCalled();
     });
   });
 });

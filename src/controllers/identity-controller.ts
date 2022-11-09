@@ -21,11 +21,11 @@ class IdentityController {
     );
 
     if (!result) {
-      res.status(400).send({ errors: ['Mobile phone is already registered!'] });
+      res.status(400).json({ errors: ['Mobile phone is already registered!'] });
       return;
     }
 
-    res.send(result);
+    res.json(result);
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -34,11 +34,11 @@ class IdentityController {
     const result = await this._mediator.send<IJwtResult, LoginRequest>(request);
 
     if (!result) {
-      res.status(400).send({ errors: ['Invalid credentials!'] });
+      res.status(400).json({ errors: ['Invalid credentials!'] });
       return;
     }
 
-    res.send(result);
+    res.json(result);
   }
 
   async photo(req: Request, res: Response): Promise<void> {
@@ -48,7 +48,7 @@ class IdentityController {
       request
     );
 
-    res.send(result);
+    res.json(result);
   }
 }
 

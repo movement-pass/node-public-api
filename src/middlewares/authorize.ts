@@ -11,14 +11,14 @@ function authorize(jwt: Jwt) {
     const authorization = req.header('authorization');
 
     if (!authorization) {
-      res.status(403).send({ errors: ['Missing authorization!'] });
+      res.status(403).json({ errors: ['Missing authorization!'] });
       return;
     }
 
     const [, token] = authorization.split(' ');
 
     if (!token) {
-      res.status(403).send({ errors: ['Invalid authorization format!'] });
+      res.status(403).json({ errors: ['Invalid authorization format!'] });
       return;
     }
 
@@ -28,7 +28,7 @@ function authorize(jwt: Jwt) {
       (req as unknown as Record<string, string>).userId = user.id;
       next();
     } catch (e) {
-      res.status(401).send({ errors: ['Unauthorized!'] });
+      res.status(401).json({ errors: ['Unauthorized!'] });
     }
   };
 }

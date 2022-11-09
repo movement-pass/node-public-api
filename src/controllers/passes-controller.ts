@@ -22,7 +22,7 @@ class PassesController {
 
     const result = await this._mediator.send<IdResult, ApplyRequest>(request);
 
-    res.status(201).send(result);
+    res.status(201).json(result);
   }
 
   async detail(req: Request, res: Response): Promise<void> {
@@ -36,7 +36,7 @@ class PassesController {
     );
 
     if (!detail) {
-      res.status(404).send({ errors: ['Pass does not exist!'] });
+      res.status(404).json({ errors: ['Pass does not exist!'] });
       return;
     }
 
@@ -45,7 +45,7 @@ class PassesController {
       `private,max-age=${detail.status === 'APPLIED' ? 60 * 5 : 60 * 24 * 30}`
     );
 
-    res.send(detail);
+    res.json(detail);
   }
 
   async list(req: Request, res: Response): Promise<void> {
@@ -67,7 +67,7 @@ class PassesController {
 
     res.header('cache-control', `private,max-age=${60 * 5}`);
 
-    res.send(result);
+    res.json(result);
   }
 }
 
