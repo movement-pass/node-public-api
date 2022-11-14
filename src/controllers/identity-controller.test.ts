@@ -18,7 +18,7 @@ describe('IdentityController', () => {
   describe('register', () => {
     describe('valid input', () => {
       let mockedMediatorSend: jest.Mock;
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let registerRequest: RegisterRequest;
 
       beforeAll(async () => {
@@ -47,10 +47,10 @@ describe('IdentityController', () => {
           }
         };
 
-        mockedResponseSend = jest.fn();
+        mockedResponseJson = jest.fn();
 
         const res = {
-          send: mockedResponseSend
+          json: mockedResponseJson
         };
 
         await controller.register(req as Request, res as unknown as Response);
@@ -63,12 +63,12 @@ describe('IdentityController', () => {
       });
 
       it('sends jwt token', () => {
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
 
     describe('already registered', () => {
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let mockedResponseStatus: jest.Mock;
 
       beforeAll(async () => {
@@ -86,12 +86,11 @@ describe('IdentityController', () => {
           body: {}
         };
 
-        mockedResponseSend = jest.fn();
-        mockedResponseStatus = jest.fn(() => ({ send: mockedResponseSend }));
+        mockedResponseJson = jest.fn();
+        mockedResponseStatus = jest.fn(() => ({ json: mockedResponseJson }));
 
         const res = {
-          status: mockedResponseStatus,
-          send: mockedResponseSend
+          status: mockedResponseStatus
         };
 
         await controller.register(req as Request, res as unknown as Response);
@@ -99,7 +98,7 @@ describe('IdentityController', () => {
 
       it('sends bad request', () => {
         expect(mockedResponseStatus).toHaveBeenCalledWith(400);
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
   });
@@ -107,7 +106,7 @@ describe('IdentityController', () => {
   describe('login', () => {
     describe('valid credentials', () => {
       let mockedMediatorSend: jest.Mock;
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let loginRequest: LoginRequest;
 
       beforeAll(async () => {
@@ -128,10 +127,10 @@ describe('IdentityController', () => {
           }
         };
 
-        mockedResponseSend = jest.fn();
+        mockedResponseJson = jest.fn();
 
         const res = {
-          send: mockedResponseSend
+          json: mockedResponseJson
         };
 
         await controller.login(req as Request, res as unknown as Response);
@@ -145,12 +144,12 @@ describe('IdentityController', () => {
       });
 
       it('sends jwt token', () => {
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
 
     describe('invalid credentials', () => {
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let mockedResponseStatus: jest.Mock;
 
       beforeAll(async () => {
@@ -164,12 +163,11 @@ describe('IdentityController', () => {
           mediator as unknown as Mediator
         );
 
-        mockedResponseSend = jest.fn();
-        mockedResponseStatus = jest.fn(() => ({ send: mockedResponseSend }));
+        mockedResponseJson = jest.fn();
+        mockedResponseStatus = jest.fn(() => ({ json: mockedResponseJson }));
 
         const res = {
-          status: mockedResponseStatus,
-          send: mockedResponseSend
+          status: mockedResponseStatus
         };
 
         const req = {
@@ -181,14 +179,14 @@ describe('IdentityController', () => {
 
       it('sends bad request', () => {
         expect(mockedResponseStatus).toHaveBeenCalledWith(400);
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
   });
 
   describe('photo', () => {
     let mockedMediatorSend: jest.Mock;
-    let mockedResponseSend: jest.Mock;
+    let mockedResponseJson: jest.Mock;
     let photoUrlRequest: PhotoUrlRequest;
 
     beforeAll(async () => {
@@ -209,10 +207,10 @@ describe('IdentityController', () => {
         }
       };
 
-      mockedResponseSend = jest.fn();
+      mockedResponseJson = jest.fn();
 
       const res = {
-        send: mockedResponseSend
+        json: mockedResponseJson
       };
 
       await controller.photo(req as Request, res as unknown as Response);
@@ -225,7 +223,7 @@ describe('IdentityController', () => {
     });
 
     it('sends result', () => {
-      expect(mockedResponseSend).toHaveBeenCalled();
+      expect(mockedResponseJson).toHaveBeenCalled();
     });
   });
 });
