@@ -7,7 +7,7 @@ function validate(schema: Joi.Schema) {
     const { value, error } = schema.validate(req.body);
 
     if (error) {
-      res.status(400).send({
+      res.status(400).json({
         errors: error.details.map((d) => d.message)
       });
       return;
