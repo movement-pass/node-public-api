@@ -13,8 +13,8 @@ describe('PassesController', () => {
   describe('detail', () => {
     describe('existent pass', () => {
       let mockedMediatorSend: jest.Mock;
-      let mockedHeaderSet: jest.Mock;
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseHeaderSet: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let viewPassRequest: ViewPassRequest;
 
       beforeAll(async () => {
@@ -35,12 +35,12 @@ describe('PassesController', () => {
           }
         };
 
-        mockedHeaderSet = jest.fn();
-        mockedResponseSend = jest.fn();
+        mockedResponseHeaderSet = jest.fn();
+        mockedResponseJson = jest.fn();
 
         const res = {
-          header: mockedHeaderSet,
-          send: mockedResponseSend
+          header: mockedResponseHeaderSet,
+          json: mockedResponseJson
         };
 
         await controller.detail(
@@ -57,16 +57,16 @@ describe('PassesController', () => {
       });
 
       it('sets cache control header', () => {
-        expect(mockedHeaderSet).toHaveBeenCalled();
+        expect(mockedResponseHeaderSet).toHaveBeenCalled();
       });
 
       it('sends matching pass', () => {
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
 
     describe('non-existent pass', () => {
-      let mockedResponseSend: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let mockedResponseStatus: jest.Mock;
 
       beforeAll(async () => {
@@ -80,12 +80,11 @@ describe('PassesController', () => {
           mediator as unknown as Mediator
         );
 
-        mockedResponseSend = jest.fn();
-        mockedResponseStatus = jest.fn(() => ({ send: mockedResponseSend }));
+        mockedResponseJson = jest.fn();
+        mockedResponseStatus = jest.fn(() => ({ json: mockedResponseJson }));
 
         const res = {
-          status: mockedResponseStatus,
-          send: mockedResponseSend
+          status: mockedResponseStatus
         };
 
         const req = { params: { id: Id.generate() } };
@@ -98,15 +97,15 @@ describe('PassesController', () => {
 
       it('sends not found', () => {
         expect(mockedResponseStatus).toHaveBeenCalledWith(404);
-        expect(mockedResponseSend).toHaveBeenCalled();
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
   });
 
   describe('list', () => {
     let mockedMediatorSend: jest.Mock;
-    let mockedHeaderSet: jest.Mock;
-    let mockedResponseSend: jest.Mock;
+    let mockedResponseHeaderSet: jest.Mock;
+    let mockedResponseJson: jest.Mock;
     let viewPassesRequest: ViewPassesRequest;
 
     beforeAll(async () => {
@@ -126,12 +125,12 @@ describe('PassesController', () => {
         }
       };
 
-      mockedHeaderSet = jest.fn();
-      mockedResponseSend = jest.fn();
+      mockedResponseHeaderSet = jest.fn();
+      mockedResponseJson = jest.fn();
 
       const res = {
-        header: mockedHeaderSet,
-        send: mockedResponseSend
+        header: mockedResponseHeaderSet,
+        json: mockedResponseJson
       };
 
       await controller.list(
@@ -148,11 +147,11 @@ describe('PassesController', () => {
     });
 
     it('sets cache control header', () => {
-      expect(mockedHeaderSet).toHaveBeenCalled();
+      expect(mockedResponseHeaderSet).toHaveBeenCalled();
     });
 
     it('sends matching passes', () => {
-      expect(mockedResponseSend).toHaveBeenCalled();
+      expect(mockedResponseJson).toHaveBeenCalled();
     });
   });
 });
