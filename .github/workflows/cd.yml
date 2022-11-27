@@ -10,7 +10,7 @@ jobs:
       - name: Node.js setup
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18
 
       - name: Release
         run: |
@@ -20,8 +20,8 @@ jobs:
           zip -r -9 movement-pass_public-api_v1.zip *
 
       - name: Update
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && env.AWS_REGION != '' }}
-        uses: kazimanzurrashid/aws-lambda-update-action@v1
+        if: ${{ github.event_name == 'push' && github.ref_name == 'main' && env.AWS_REGION != '' }}
+        uses: kazimanzurrashid/aws-lambda-update-action@v2.0.1
         with:
           zip-file: ./dist/movement-pass_public-api_v1.zip
         env:
