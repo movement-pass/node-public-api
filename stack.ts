@@ -1,21 +1,22 @@
-import { App, Construct, Duration, Stack, StackProps } from '@aws-cdk/core';
+import { Construct } from 'constructs';
+import { App, Duration, Stack, StackProps } from 'aws-cdk-lib';
 
 import {
   Effect,
   PolicyStatement,
   Role,
   ServicePrincipal
-} from '@aws-cdk/aws-iam';
+} from 'aws-cdk-lib/aws-iam';
 
-import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
+import { Code, Function, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 
-import { StringParameter } from '@aws-cdk/aws-ssm';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
-import { Table } from '@aws-cdk/aws-dynamodb';
+import { Table } from 'aws-cdk-lib/aws-dynamodb';
 
-import { Bucket } from '@aws-cdk/aws-s3';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 
-import { Stream } from '@aws-cdk/aws-kinesis';
+import { Stream } from 'aws-cdk-lib/aws-kinesis';
 
 import {
   AwsIntegration,
@@ -28,13 +29,13 @@ import {
   PassthroughBehavior,
   RestApi,
   SecurityPolicy
-} from '@aws-cdk/aws-apigateway';
+} from 'aws-cdk-lib/aws-apigateway';
 
-import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
 
-import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { ARecord, HostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 
-import { ApiGatewayDomain } from '@aws-cdk/aws-route53-targets';
+import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
 
 class PublicApiStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
