@@ -21,6 +21,7 @@
     "outDir": "./build",
     "removeComments": true,
     "resolveJsonModule": true,
+    "skipLibCheck": false,
     "sourceMap": false,
     "strict": true,
     "strictBindCallApply": true,
