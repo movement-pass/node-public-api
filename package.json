@@ -42,7 +42,7 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.14.6",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
+    "@typescript-eslint/parser": "^5.57.0",
     "@vercel/ncc": "^0.36.1",
     "aws-cdk-lib": "^2.67.0",
     "constructs": "^10.1.267",
