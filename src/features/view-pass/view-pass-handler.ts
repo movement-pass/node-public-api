@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { inject, injectable } from 'tsyringe';
 
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { getSignedUrl } from '@aws-sdk/cloudfront-signer';
 
 import { handles } from '../../infrastructure/handles';
 import { Handler } from '../../infrastructure/handler';
@@ -63,7 +64,8 @@ class ViewPassHandler extends Handler<ViewPassRequest, IPassDetailItem> {
   }
 
   private async getApplicant(id: string): Promise<IApplicant> {
-    const { applicantsTable } = await this._config.get();
+    const { applicantsTable, photoUrlPrivateKey, photoUrlKeyPairId } =
+      await this._config.get();
 
     const cmd = new GetCommand({
       TableName: applicantsTable,
@@ -73,6 +75,15 @@ class ViewPassHandler extends Handler<ViewPassRequest, IPassDetailItem> {
     });
 
     const { Item } = await this._dynamodb.send(cmd);
+
+    if (Item) {
+      Item.photo = getSignedUrl({
+        dateLessThan: new Date(Date.now() + 1000 * 60 * 60 * 6).toString(),
+        url: Item.photo,
+        keyPairId: photoUrlKeyPairId,
+        privateKey: photoUrlPrivateKey
+      });
+    }
 
     return Item as IApplicant;
   }
