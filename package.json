@@ -27,7 +27,7 @@
     "aws-xray-sdk": "^3.5.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
