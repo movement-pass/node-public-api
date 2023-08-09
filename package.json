@@ -24,7 +24,7 @@
     "@aws-sdk/s3-request-presigner": "^3.326.0",
     "@vendia/serverless-express": "^4.10.1",
     "aws-lambda": "^1.0.7",
-    "aws-xray-sdk": "^3.5.0",
+    "aws-xray-sdk": "^3.5.1",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
