@@ -33,7 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.8.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.14",
