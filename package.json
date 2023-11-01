@@ -46,7 +46,7 @@
     "@vercel/ncc": "^0.38.0",
     "aws-cdk-lib": "^2.99.1",
     "constructs": "^10.2.70",
-    "eslint": "^8.50.0",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-github": "^4.10.1",
     "eslint-plugin-jest": "^27.4.2",
